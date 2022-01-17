@@ -1,0 +1,74 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+     .login-container {
+        display: flex;
+        align-content: center;
+        align-items: center;
+        justify-content: center;
+        min-height: auto;
+    }
+
+    
+    .panel-body {
+        max-width: 300px;
+    }
+</style>
+
+<div class="page-container login-container">
+    <!-- Page content -->
+    <div class="page-content">
+        <!-- Main content -->
+        <div class="content-wrapper">
+            <!-- Content area -->
+            <div class="content">
+
+                <div class="panel panel-body p-20">
+                    <div class="text-center">
+                        <h5 class="content-group">Login to your account</h5>
+                    </div>
+                    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { id = "loginForm" }))
+                    {
+                        <label>Username</label>
+                        <div class="form-group has-feedback">
+                            <input type="text" class="form-control" name="Username" placeholder="Enter your username" autocomplete="off"/>
+                            <div class="form-control-feedback">
+                                <i class="icon-user text-muted"></i>
+                            </div>
+                        </div>
+                        <label>Password</label>
+                        <div class="form-group has-feedback">
+                            <input type="password" class="form-control" name="Password" placeholder="Enter your password" />
+                            <div class="form-control-feedback">
+                                <i class="icon-key text-muted"></i>
+                            </div>
+                        </div>
+
+                        if (ViewBag.Status == "Unauthorize")
+                        {
+                            <label class="text-danger">Username or password is wrong</label>
+                        }
+                        <div>
+                            <div class="pull-left">
+                                <button type="submit" class="btn btn-primary btn-rounded">Sign in&nbsp;<i class="glyphicon glyphicon glyphicon-play-circle"></i></button>
+                            </div>
+                            <div class="pull-right pt-5">
+                                <a href="#">sign up</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <!-- /content area -->
+        </div>
+        <!-- /main content -->
+    </div>
+    <!-- /page content -->
+</div>
+
+
+
+

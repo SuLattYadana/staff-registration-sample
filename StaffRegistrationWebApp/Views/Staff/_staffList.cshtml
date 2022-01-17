@@ -1,0 +1,82 @@
+﻿@model StaffRegistrationWebApp.Data.Models.ListwithPage<StaffRegistrationWebApp.Data.Models.Stafftb>
+
+@using PagedList;
+@using PagedList.Mvc;
+
+@if (Model.TotalCount > 0)
+{
+    <div style="overflow-x:auto;">
+        <table class="table table-bordered text-center table-striped display" id="table_reportList">
+            <thead>
+                <tr>
+                    <th>Name </th>
+                    <th>JobTitle</th>
+                    <th>Department</th>
+                    <th>Role</th>
+                    <th>Birth Date</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Username</th>
+                    <th>Nationality</th>
+                    <th>Religion</th>
+                    <th>Qualification</th>
+                    <th>Address</th>
+                    <th>State</th>
+                    <th>Township</th>
+                    <th>Date Of Join</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var obj in Model.Results)
+                {
+                <tr>
+                    <td>@obj.Name</td>
+                    <td>@obj.JobTile </td>
+                    <td>@obj.Department</td>
+                    <td>@obj.Role</td>
+                    <td>@obj.DateOfBirth.Date.ToShortDateString()</td>
+                    <td>@obj.Phone</td>
+                    <td>@obj.Email</td>
+                    <td>@obj.UserName</td>
+                    <td>@obj.Nationality</td>
+                    <td>@obj.Religion</td>
+                    <td>@obj.Qualification</td>
+                    <td>@obj.Address</td>
+                    <td>@obj.State</td>
+                    <td>@obj.Township</td>
+
+                    <td>@obj.DateOfJoin.Date.ToShortDateString()</td>
+                    <td>
+
+                        <button class="btn btn-primary mx-lg-2" data-ID="@obj.ID" onclick="editStaff(this)">
+                            <i class="glyphicon glyphicon-edit"></i>
+                        </button>
+
+                        <button class="btn btn-danger delete" data-toggle="modal" id="deleteBtn" data-ID="@obj.ID" onclick="Delete(this)">
+                            <i class="glyphicon glyphicon-trash"></i>
+                        </button>
+                    </td>
+
+
+                </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <br />
+    <div class="col-md-12">
+        <div class="pagedList" style="text-align:center">
+            @Html.PagedListPager(Model.Results, page => Url.Action("_staffList", "Staff",
+                  new { page }), PagedListRenderOptions.ClassicPlusFirstAndLast)
+        </div>
+    </div>
+
+}
+else
+{
+    <h1>No data </h1>
+}
+

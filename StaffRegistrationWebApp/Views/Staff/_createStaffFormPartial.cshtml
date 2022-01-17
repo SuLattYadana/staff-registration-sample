@@ -1,0 +1,185 @@
+﻿
+@model StaffRegistrationWebApp.Data.Models.Stafftb
+
+@if (ViewBag.nulldata == "nulldata")
+{
+    <h1>Data is unavailable</h1>
+}
+
+
+@using (Html.BeginForm("CreateUpdateStaff", "Staff", FormMethod.Post, new { id = "StaffForm" }))
+{
+
+
+<div class="border p-3 mt-4">
+    @if (ViewBag.data == "null")
+    {
+        <span class="text-danger">Somthing Wrong !</span>
+    }
+    <div class="row">
+        <div class=" mb-3 col-6">
+            <label>Name</label><span class="text-danger">*</span>
+            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @autocomplete = "off", required = "required" })
+
+        </div>
+        <div class="mb-3 col-6">
+            <label>Job Tile</label><span class="text-danger">*</span>
+            @Html.TextBoxFor(model => model.JobTile, new { type = "text", @class = "form-control", @autocomplete = "off", required = "required" })
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="mb-3 col-6">
+            <label>Department</label><span class="text-danger">*</span>
+            @Html.TextBoxFor(model => model.Department, new { type = "text", @class = "form-control", @autocomplete = "off", required = "required" })
+
+        </div>
+        <div class="mb- col-6">
+            <label>Role</label><span class="text-danger">*</span>
+            @Html.TextBoxFor(model => model.Role, new { type = "text", @class = "form-control", @autocomplete = "off", required = "required" })
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="mb-3 col-6">
+            <label>Email</label><span class="text-danger">*</span>
+            @Html.TextBoxFor(model => model.Email, new { type = "Email", @class = "form-control", @autocomplete = "off", @placeholder = "example@gmail.com", required = "required" })
+
+        </div>
+        <div class="mb-3 col-6">
+            <label>UserName</label><span class="text-danger">*</span>
+            @Html.TextBoxFor(model => model.UserName, new { type = "text", @class = "form-control", @autocomplete = "off", required = "required" })
+
+        </div>
+    </div>
+
+    <div class="row">
+        @if (Model.DateOfBirth != null)
+        {
+            <div class="mb-3 col-6">
+                <label>Date of Birth</label><span class="text-danger">*</span>
+                <div class="input-group">
+                    <input type="text" class="form-control DOB_Form" id="DOBform" name="DateOfBirth" value="@Model.DateOfBirth.ToString("dd MMMM, yyy")" autocomplete="off">
+                    <span class="input-group-addon"><i class="icon-calendar22"></i></span>
+                </div>
+
+
+
+
+                <input type="hidden" name="DateOfBirth" value="@Model.DateOfBirth.ToString("dd MMMM, yyy")" id="birth_date" />
+            </div>
+        }
+        else
+        {
+            <div class="mb-3 col-6">
+                <label>Date of Birth</label><span class="text-danger">*</span>
+                <div class="input-group">
+                    <input type="text" class="form-control DOB_Form" id="DOBform" name="DOB" value="" autocomplete="off">
+                    <span class="input-group-addon"><i class="icon-calendar22"></i></span>
+                </div>
+
+            </div>
+        }
+
+        <div class="mb-3 col-6">
+            <label>Phone</label><span class="text-danger">*</span>
+            @Html.TextBoxFor(model => model.Phone, new { type = "text", @class = "form-control", @autocomplete = "off", required = "required" })
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="mb-3">
+            <label>Address</label><span class="text-danger">*</span>
+            @Html.TextAreaFor(model => model.Address, new { type = "text", @class = "form-control", @autocomplete = "off", required = "required" })
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="mb-3 col-6">
+            <label>State</label>
+            @Html.TextBoxFor(model => model.State, new { type = "text", @class = "form-control", @autocomplete = "off" })
+
+        </div>
+        <div class="mb-3 col-6">
+            <label>Township</label><span class="text-danger">*</span>
+            @Html.TextBoxFor(model => model.Township, new { type = "text", @class = "form-control", @autocomplete = "off", required = "required" })
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="mb-3 col-6">
+            <label>Nationality</label><span class="text-danger">*</span>
+            @Html.TextBoxFor(model => model.Nationality, new { type = "text", @class = "form-control", @autocomplete = "off", required = "required" })
+
+        </div>
+        <div class="mb-3 col-6">
+            <label>Religion</label><span class="text-danger">*</span>
+            @Html.TextBoxFor(model => model.Religion, new { type = "text", @class = "form-control", @autocomplete = "off", required = "required" })
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="mb-3 col-6">
+            <label>Qualification</label><span class="text-danger">*</span>
+            @Html.TextBoxFor(model => model.Qualification, new { type = "text", @class = "form-control", @autocomplete = "off", required = "required" })
+
+        </div>
+    </div>
+
+    <div class="row">
+        @if (Model.DateOfJoin != null)
+        {
+
+
+            <div class="mb-3">
+                <label>Date Of Join</label><span class="text-danger">*</span>
+                <div class="input-group">
+                    <input type="text" class="form-control DOJForm" name="DateOfJoin" value="@Model.DateOfJoin.ToString("dd MMMM, yyy")" autocomplete="off">
+                    <span class="input-group-addon"><i class="icon-calendar22"></i></span>
+                </div>
+            </div>
+
+        }
+        else
+        {
+            <div class="mb-3">
+                <label>Date Of Join</label><span class="text-danger">*</span>
+                <div class="input-group">
+                    <input type="text" class="form-control DOJForm" id="DOBform" name="DateOfJoin" value="" autocomplete="off">
+                    <span class="input-group-addon"><i class="icon-calendar22"></i></span>
+                </div>
+            </div>
+
+        }
+
+        @*  <div class="mb-3">
+                <label>Date Of Join</label><span class="text-danger">*</span>
+                @Html.TextBoxFor(model => model.DateOfJoin, new { type = "date", @class = "form-control", required = "required" })
+            </div>*@
+    </div>
+
+    <div class="mb-3">
+        <input type="checkbox" value="true" id="IsAdmin" name="IsAdmin">
+        <label for="IsAdmin">IsAdmin</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary" style="width:150px">Save</button>
+    <button class="btn btn-warning" data-bs-dismiss="modal" style="width:150px;text-decoration:none; color:white;">Cancel</button>
+</div>
+
+
+    @Html.HiddenFor(m => m.ID)
+
+}
+
+
+
+
+
+

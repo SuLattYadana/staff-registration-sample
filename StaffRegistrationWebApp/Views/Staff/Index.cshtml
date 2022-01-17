@@ -1,0 +1,292 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row pt-5">
+    <div class="col-md-2">
+        <h2 class="text-primary">Staff List</h2>
+    </div>
+    <div class="col-md-3">
+        <div class="input-group">
+            <input type="text" class="form-control daterange-single" id="datetime" value="" autocomplete="off">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+        </div>
+
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search Staff..." name="q" onkeyup="keySearch(this.value)" id="txt_Name" autocomplete="off">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" onclick="Search()"><i class="glyphicon glyphicon-search"></i>&nbsp;search</button>
+                </span>
+            </div><!-- /input-group -->
+
+        </div>
+    </div>
+    
+    <div class="col-md-4 text-end">
+        <button class="btn btn-info" onclick="reportBtn()">Report</button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="addNewStaff()">
+            <i class="glyphicon glyphicon-plus">
+            </i> Add Staff
+        </button>
+    </div>
+   
+
+</div>
+
+
+<div id="bindList"> </div>
+
+<div class="modal" tabindex="-1" id="bind_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Staff</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="staff-model">
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@*Delete Confirmation Modal Form*@
+<div id="delete-modal" class="modal fade in" style="display: none;">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h4 class="modal-title w-100">Are you sure?</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Do you really want to delete these records? This process cannot be undone.</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" onClick="DeleteStaff()" id="delete_staffbtn">Delete</button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section scripts{
+
+    <script src="~/Content/jquery.table2excel.min.js"></script>
+
+    <script type="text/javascript">
+
+        var pagesize = 10;
+        var page = 1;
+        var name = "";
+        var datetime;
+
+        $(function () {
+
+            $('#datetime').change(function () {
+
+
+                datetime = $('#datetime').val();
+                console.log("datetime - " + datetime);
+
+                bindList();
+            });
+
+            $('.daterange-single').daterangepicker({
+                singleDatePicker: true,
+                locale: {
+                    format: 'DD MMM, YYYY'
+                }
+            });
+            bindList();
+            initPaging();
+
+        });
+
+
+
+
+        function keySearch(e) {
+            Search();
+        }
+        function Search() {
+            name = $('#txt_Name').val();
+            page = 1;
+            bindList();
+        }
+
+        function bindList() {
+            datetime = $("#datetime").val();
+            $.ajax({
+                cache: false,
+                url: '@Url.Action("_staffList", "Staff")',
+                data: {date:datetime, pagesize: pagesize, page: page,name:name },
+                beforeSend: function () {
+
+                },
+                success: function (result) {
+                    $('#bindList').empty().append(result);
+
+                },
+                complete: function () {
+                }
+            });
+        }
+
+        function initPaging() {
+            $("#bindList").on("click", ".pagedList a", function (e) {
+                e.preventDefault();
+
+                var $a = $(this).attr("href");
+                try {
+                    var pageurl = $a.split(/=/);
+                    page = pageurl[1];
+                    if (page == null) {
+                        page = 1;
+                    }
+                }
+                catch (e) {
+                    page = 1;
+                }
+                bindList();
+            });
+        }
+
+        function reportBtn() {
+
+            $("#table_reportList").table2excel({
+                exclude: ".excludeThisClass",
+                name: "Worksheet Name",
+                filename: "StaffFile",
+                fileext: ".xlsx"
+            });
+        }
+
+       @* CreateamdUpdateStaff*@
+
+        function addNewStaff() {
+            formModal("Add", 0);
+        }
+
+        function editStaff(e) {
+            var ID = $(e).attr('data-ID');
+
+            formModal("Edit", ID);
+        }
+
+        function formModal(formType, id) {
+            $.ajax({
+                cache: false,
+                url: '@Url.Action("_createStaffFormPartial", "Staff")',
+                data: { formType: formType, id: id },
+                beforeSend: function () {
+
+                },
+                success: function (myData) {
+
+
+                    $('#staff-model').empty().append(myData);
+
+                },
+                complete: function () {
+
+                    $('.DOB_Form').pickadate({
+                        editable: true,
+                        selectMonths: true,
+                        selectYears: 100,
+                        min: new Date(1990, 1, 1),
+
+                    });
+                    $('.DOJForm').pickadate({
+                        editable: true,
+                        selectMonths: true,
+                        selectYears: 100,
+                        min: new Date(2021, 1, 1),
+
+                    });
+                   
+
+                    $('#bind_modal').modal('show');
+
+
+                    $('#StaffForm').submit(function (e) {
+                        e.preventDefault();
+                        $.ajax({
+
+                            cache: false,
+                            url: '@Url.Action("CreateUpdateStaff", "Staff")',
+                            type: "Post",
+
+                            data: $(this).serialize(),
+                            beforeSend: function () {
+                                $('.btn').prop("disabled", true);
+                            },
+                            success: function (myData) {
+
+
+                                 bindList();
+
+                                $('#bind_modal').modal('hide');
+
+
+                            },
+                            complete: function () {
+                                $('.btn').prop("disabled", false);
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+        @* CreateamdUpdateStaff *@
+
+
+
+        function Delete(d) {
+            $("#delete-modal").modal('show');
+            var id = $(d).attr('data-ID');
+            $("#delete_staffbtn").attr('data-ID', id);
+        }
+
+        function DeleteStaff() {
+                var id = $("#delete_staffbtn").attr('data-id');
+
+                 $.ajax({
+                    url: '@Url.Action("Delete", "Staff")',
+                    data: { id: id },
+                    success: function () {
+                        bindList();
+                    },
+                    complete: function () {
+                        window.location.href = "/Staff/Index";
+
+                    }
+                });
+            }
+
+
+
+    </script>
+}
+
+
+
+
+
